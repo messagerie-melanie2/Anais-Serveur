@@ -860,6 +860,7 @@ function anaisDocMelWebLdab() {
 * - Si elle est en "nomdelaliste@i-carre.net" alors le lien est https://i-carre.listes.m2.e2.rie.gouv.fr/sympa/info/nomdelaliste
 * - Si elle est en "nomdelaliste@cerema.fr" alors le lien est https://cerema.listes.m2.e2.rie.gouv.fr/sympa/info/nomdelaliste
 * - Si elle est en "nomdelaliste@cop21.gouv.fr" alors le lien est https://cop21.listes.m2.e2.rie.gouv.fr/sympa/info/nomdelaliste
+* - Si elle est en "nomdelaliste@educagri.fr" alors le lien est https://listes.diffusion.eat.educagri.fr/sympa/info/nomdelaliste
 * -> Je pense que l'on peut prendre comme règle https://préfixedomaine.listes.m2.e2.rie.gouv.fr/sympa/info/nomdelaliste
 *  avec préfixedomaine = chaine de caractères entre le "@" et le "." de l'attribut mailPR
 * 
@@ -884,15 +885,12 @@ function anaisDocUrlSympa($index=0) {
   $prefix=substr($hote, 0, $point);
 
   if ("communautes.agriculture.gouv.fr"==$hote){
-  
     $urlsympa="https://agriculture.forums.listes.m2.e2.rie.gouv.fr/sympa/info/$nom";
-  
   } else if ("jscs"==$prefix){
-
     $urlsympa="https://sante.listes.m2.e2.rie.gouv.fr/sympa/info/$nom";
-
+  } else if ("educagri"==$prefix){
+    $urlsympa="https://listes.diffusion.eat.educagri.fr/sympa/info/$nom";
   } else {
-  
     $urlsympa="https://$prefix.listes.m2.e2.rie.gouv.fr/sympa/info/$nom";
   }
 
