@@ -8,7 +8,7 @@
 
 
 // numéro de version de l'application
-define('ANAIS_SRV_VERSION', '1.11');
+define('ANAIS_SRV_VERSION', '1.12');
 
 
 /**
