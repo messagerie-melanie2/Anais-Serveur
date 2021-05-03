@@ -8,7 +8,7 @@
 
 
 // numéro de version de l'application
-define('ANAIS_SRV_VERSION', '1.12');
+define('ANAIS_SRV_VERSION', '1.13');
 
 
 /**
@@ -389,9 +389,10 @@ function anaisConteneurUtil(){
   }
   //parcourir les annuaires pour retrouver l'utilisateur
   $filtre='uid='.$_SESSION['utilisateur'];
-  $attrs=array('dn');
+  $attrs=array('dn', 'seeAlso');
   $dn='';
   $conn;
+  $seealso='';
 
   foreach ($GLOBALS['anaisconfig']['annuaires'] as $annuaire){
 
@@ -412,6 +413,12 @@ function anaisConteneurUtil(){
        continue;
      }
     $dn=@ldap_get_dn($conn,$ldap_entree);
+    
+    $vals=@ldap_get_values($conn, $ldap_entree, 'seeAlso');
+    if (false!==$vals && 0<$vals['count']){
+        $seealso=$vals[0];
+    }
+    
     @ldap_free_result($ldap_entree);
 
     break;
@@ -433,7 +440,7 @@ function anaisConteneurUtil(){
   $filtre='(&(objectclass=organizationalUnit)(mineqtypeentree=NSER))';
   $attrs=array('mineqtypeentree', 'seealso');
   $dn='';
-  $seealso='';
+  
 
   for ($c=6;$c<$nb;$c++){
 
@@ -457,12 +464,6 @@ function anaisConteneurUtil(){
 
       if (false!==$ldap_entree){
         $dn=ldap_get_dn($conn, $ldap_entree);
-        
-        $vals=@ldap_get_values($conn, $ldap_entree, 'seealso');
-        
-        if (false!==$vals && 0<$vals['count']){
-          $seealso=$vals[0];
-        }
       }
     }
 
