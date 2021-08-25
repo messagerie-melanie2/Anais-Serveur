@@ -409,16 +409,16 @@ function anaisConteneurUtil(){
     }
     $nb=ldap_count_entries($conn,$ldapresult);
     $ldap_entree=@ldap_first_entry($conn,$ldapresult);
-     if ($ldap_entree==false){
-       continue;
-     }
+    if ($ldap_entree==false){
+      continue;
+    }
     $dn=@ldap_get_dn($conn,$ldap_entree);
-    
+
     $vals=@ldap_get_values($conn, $ldap_entree, 'seeAlso');
     if (false!==$vals && 0<$vals['count']){
         $seealso=$vals[0];
     }
-    
+
     @ldap_free_result($ldap_entree);
 
     break;
@@ -428,31 +428,45 @@ function anaisConteneurUtil(){
     return false;
   }
 
-  //mantis 3107
-  $comp_racine=explode(',', $dn);
-  $nb=count($comp_racine);
-
-  if ($nb<7){
+  if (count(explode(',', $dn))<7){
     anaisSetLastError(-1,'le dn de l\'utilisateur a moins de 7 composantes!!!');
     return false;
   }
+
+  if (!empty($seealso)){
+    $_SESSION['dnserviceutil2']=getServiceFromDn($seealso, $conn);//==$service
+  }
+  //tester conteneur
+  if (!empty($dn)){
+    $_SESSION['dnserviceutil']=getServiceFromDn($dn, $conn);//==$service
+    return true;
+  }
+
+  return false;
+  //fin mantis 3107
+}
+
+
+function getServiceFromDn($dn, $conn)
+{
+  //mantis 3107
+  $comp_racine=explode(',', $dn);
+  $nb=count($comp_racine);
   $service='';
-  $filtre='(&(objectclass=organizationalUnit)(mineqtypeentree=NSER))';
-  $attrs=array('mineqtypeentree', 'seealso');
+  $filtre='(&(objectclass=organizationalUnit)(mineqTypeEntree=NSER))';
+  $attrs=array('mineqTypeEntree','seeAlso');
   $dn='';
-  
 
   for ($c=6;$c<$nb;$c++){
-
     $service='';
-    $dn='';
-    $bsep=false;
+    $sep=false;
     //construire dn
-    for ($b=$nb-$c; $b<$nb; $b++){
-      if ($bsep)
+    //for ($b=$nb-$c; $b<$nb; $b++){
+    for($i = $nb-$c; $i < $nb; $i++){
+      if ($sep)
         $service.=',';
-      $service.=$comp_racine[$b];
-      $bsep=true;
+      $service.=$comp_racine[$i];
+      $sep=true;
     }
 
     //rechercher conteneur
@@ -468,19 +482,10 @@ function anaisConteneurUtil(){
     }
 
     ldap_free_result($ldapresult);
-    
-    if (!empty($seealso)){
-     $_SESSION['dnserviceutil2']=$seealso;//==$service
-    }
-
-    //tester conteneur
-    if (!empty($dn)){
-     $_SESSION['dnserviceutil']=$dn;//==$service
-     return true;
-    }
+    if(!empty($dn))
+    	return $dn;
   }
-  return false;
-  //fin mantis 3107
+  return "";
 }
 
 
