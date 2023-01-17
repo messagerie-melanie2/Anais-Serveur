@@ -144,7 +144,8 @@ $GLOBALS["anaisconfig"]=array (
           'anaisldap' => 'anaisldapListeEntrees',
           'defer' => '1',
           'tri' => 'anaisDocTriConteneur',
-          'filtre' => '(&(!(mineqportee=00))(objectclass=organizationalUnit)(|(mineqTypeEntree=NSER)(mineqTypeEntree=NUNI)(mineqTypeEntree=NGRO)(mineqTypeEntree=NOHE)))',
+          'filtre' => '(&(mineqportee>=21)(objectclass=organizationalUnit)(|(mineqTypeEntree=NSER)(mineqTypeEntree=NUNI)(mineqTypeEntree=NGRO)(mineqTypeEntree=NOHE)))',
+	  'filtreutil' => '(&(!(mineqportee=00))(objectclass=organizationalUnit)(|(mineqTypeEntree=NSER)(mineqTypeEntree=NUNI)(mineqTypeEntree=NGRO)(mineqTypeEntree=NOHE)))',
           'contenu' => 'anaisDocContenuArbre',
           'attributs' => 
           array (
